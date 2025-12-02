@@ -241,7 +241,7 @@ export default async function AdminDashboardPage() {
                   </div>
                   <div className="text-right">
                     <p className="font-bold text-[#059669]">
-                      ${booking.tour.price?.toLocaleString("tr-TR")}
+                      ${Number(booking.tour.price).toLocaleString("tr-TR")}
                     </p>
                     <p className="text-xs text-gray-400">{formatDate(booking.createdAt)}</p>
                   </div>
