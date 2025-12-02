@@ -1,0 +1,390 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Tur Tipi Enum
+enum TourType {
+  HAC
+  UMRE
+  KULTUR
+}
+
+// Rezervasyon Durumu Enum
+enum BookingStatus {
+  PENDING      // Yeni gelen talep
+  CONTACTED    // Arandı
+  COMPLETED    // Tamamlandı
+  CANCELLED    // İptal
+}
+
+// İletişim Mesajı Durumu Enum
+enum MessageStatus {
+  NEW          // Yeni mesaj
+  READ         // Okundu
+  REPLIED      // Yanıtlandı
+  ARCHIVED     // Arşivlendi
+}
+
+// Kullanıcı Rolü Enum
+enum UserRole {
+  SUPER_ADMIN  // Tam yetki
+  ADMIN        // Admin yetkileri
+  EDITOR       // İçerik düzenleme
+}
+
+// Kullanıcı Modeli
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  password      String    // bcrypt hash
+  name          String
+  role          UserRole  @default(ADMIN)
+  isActive      Boolean   @default(true)
+  lastLogin     DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([email])
+  @@index([role])
+}
+
+// Ana Tur Modeli
+model Tour {
+  id          String      @id @default(cuid())
+  title       String
+  slug        String      @unique
+  description String      @db.Text
+  price       Decimal     @db.Decimal(10, 2)
+  currency    String      @default("USD") // USD, EUR, TL
+  startDate   DateTime
+  endDate     DateTime
+  quota       Int         @default(40)
+  bookedSeats Int         @default(0)
+  
+  // Otel Bilgileri
+  meccaHotel    String?
+  medinaHotel   String?
+  hotelStars    Int         @default(4)
+  kaabaDistance Int?        // metre cinsinden
+
+  // Özellikler
+  isFeatured  Boolean     @default(false)
+  isActive    Boolean     @default(true)
+  type        TourType    @default(UMRE)
+  
+  // İlişkiler
+  images      TourImage[]
+  itinerary   Itinerary[]
+  included    TourIncluded[]
+  excluded    TourExcluded[]
+  bookings    Booking[]
+
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@index([slug])
+  @@index([type])
+  @@index([isFeatured])
+}
+
+// Tur Görselleri
+model TourImage {
+  id      String  @id @default(cuid())
+  url     String
+  alt     String?
+  order   Int     @default(0)
+  tourId  String
+  tour    Tour    @relation(fields: [tourId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@index([tourId])
+}
+
+// Tur Programı (Günlük)
+model Itinerary {
+  id          String  @id @default(cuid())
+  dayNumber   Int
+  title       String
+  description String  @db.Text
+  tourId      String
+  tour        Tour    @relation(fields: [tourId], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime @default(now())
+
+  @@index([tourId])
+  @@index([dayNumber])
+}
+
+// Fiyata Dahil Olanlar
+model TourIncluded {
+  id      String  @id @default(cuid())
+  item    String
+  order   Int     @default(0)
+  tourId  String
+  tour    Tour    @relation(fields: [tourId], references: [id], onDelete: Cascade)
+
+  @@index([tourId])
+}
+
+// Fiyata Dahil Olmayanlar
+model TourExcluded {
+  id      String  @id @default(cuid())
+  item    String
+  order   Int     @default(0)
+  tourId  String
+  tour    Tour    @relation(fields: [tourId], references: [id], onDelete: Cascade)
+
+  @@index([tourId])
+}
+
+// Hero Slider
+model HeroSlide {
+  id          String   @id @default(cuid())
+  title       String   // Ana başlık
+  subtitle    String?  // Alt başlık
+  imageUrl    String   // Görsel URL
+  buttonText  String?  // Buton metni (opsiyonel)
+  buttonLink  String?  // Buton linki (opsiyonel)
+  order       Int      @default(0) // Sıralama
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([order])
+  @@index([isActive])
+}
+
+// Site Ayarları (Tek satır)
+model SiteSettings {
+  id        String  @id @default("site_settings")
+
+  // Hero Section
+  heroTitle       String  @default("Manevi Yolculuğunuz En Uygun Fiyatlarla Başlasın")
+  heroSubtitle    String  @default("Hac ve Umre turlarında Türkiye'nin en güvenilir karşılaştırma platformu.")
+
+  // İletişim Bilgileri
+  contactPhone    String  @default("+90 555 555 55 55")
+  whatsappNumber  String  @default("+905555555555")
+  email           String  @default("info@enucuzhacumre.com")
+  address         String  @default("Fatih Sultan Mehmet Mah. İstanbul Cad. No:123 Fatih/İstanbul")
+
+  // Sosyal Medya
+  instagramUrl    String?
+  facebookUrl     String?
+  twitterUrl      String?
+  youtubeUrl      String?
+
+  // Footer
+  footerText      String  @default("© 2025 En Ucuz Hac Umre. Tüm hakları saklıdır.")
+  tursabNo        String  @default("A-12345")
+
+  // Şirket Bilgileri (Hakkımızda sayfası için)
+  companyStory      String?  @db.Text  // Hikayemiz
+  missionStatement  String?  @db.Text  // Misyonumuz
+  visionStatement   String?  @db.Text  // Vizyonumuz
+  yearsExperience   Int      @default(20)
+  totalGuests       Int      @default(50000)
+  satisfactionRate  Int      @default(98)
+
+  // Newsletter Ayarları
+  newsletterTitle       String  @default("Kampanyalardan Haberdar Olun")
+  newsletterDescription String  @default("Erken rezervasyon fırsatları ve özel indirimlerden ilk siz haberdar olun.")
+  newsletterButtonText  String  @default("Abone Ol")
+
+  // Çalışma Saatleri
+  workingHours      String  @default("Pzt - Cmt: 09:00 - 18:00")
+  responseTime      String  @default("24 saat içinde yanıt")
+
+  // Ödeme Yöntemleri
+  paymentMethods    String  @default("Visa,Mastercard,Troy")
+
+  // Sayfa Açıklamaları (Fallback için default değerler)
+  pageDescSss       String  @default("Hac ve Umre ile ilgili merak ettiğiniz soruların cevapları")
+  pageDescBlog      String  @default("Hac ve Umre ile ilgili faydalı bilgiler")
+  pageDescBelgeler  String  @default("Resmi ve yasal tüm belgelerimizle güvenilir hizmet sunuyoruz")
+  pageDescBanka     String  @default("Güvenli ödeme için banka hesap bilgilerimiz")
+  pageDescIletisim  String  @default("Sorularınız için bize ulaşın. Size en iyi hizmeti sunmak için buradayız.")
+
+  // Banka Hesapları Uyarı Metni
+  bankWarningText   String? @db.Text
+
+  updatedAt       DateTime @updatedAt
+}
+
+// Rezervasyon / Lead Sistemi
+model Booking {
+  id             String        @id @default(cuid())
+  
+  // Müşteri Bilgileri
+  name           String
+  phone          String
+  email          String
+  passengerCount Int           @default(1)
+  
+  // Tur Bilgisi
+  tourId         String
+  tour           Tour          @relation(fields: [tourId], references: [id], onDelete: Cascade)
+  
+  // Oda Tipi & Fiyat
+  roomType       String?       // "quad", "triple", "double"
+  totalPrice     Decimal?      @db.Decimal(10, 2)
+  
+  // Durum
+  status         BookingStatus @default(PENDING)
+  
+  // Notlar (Admin için)
+  notes          String?       @db.Text
+  
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  
+  @@index([tourId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+// Blog Yazısı
+model BlogPost {
+  id          String    @id @default(cuid())
+  title       String
+  slug        String    @unique
+  excerpt     String    // Kısa özet
+  content     String    @db.Text
+  image       String    // Kapak görseli
+  author      String
+  category    String
+  isPublished Boolean   @default(false)
+  publishedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([slug])
+  @@index([isPublished])
+  @@index([category])
+}
+
+// Sıkça Sorulan Sorular
+model FAQ {
+  id        String   @id @default(cuid())
+  question  String
+  answer    String   @db.Text
+  order     Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([order])
+  @@index([isActive])
+}
+
+// Şirket Belgeleri
+model Certificate {
+  id          String   @id @default(cuid())
+  title       String   // TÜRSAB Belgesi, Ticaret Sicil vb.
+  number      String   // Belge numarası
+  description String?  // Açıklama
+  icon        String   @default("FileText") // Lucide icon ismi
+  order       Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([order])
+}
+
+// Banka Hesapları
+model BankAccount {
+  id          String   @id @default(cuid())
+  bankName    String   // Banka adı
+  accountName String   // Hesap sahibi
+  iban        String   // IBAN
+  branch      String?  // Şube
+  logo        String?  // Banka logosu URL
+  order       Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([order])
+}
+
+// İletişim Mesajları
+model ContactMessage {
+  id        String        @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  subject   String
+  message   String        @db.Text
+  status    MessageStatus @default(NEW)
+  notes     String?       @db.Text // Admin notları
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+}
+
+// Yasal Sayfalar (KVKK, Gizlilik vb.)
+model LegalPage {
+  id        String   @id @default(cuid())
+  slug      String   @unique  // "kvkk", "gizlilik", "kosullar"
+  title     String
+  content   String   @db.Text
+  isActive  Boolean  @default(true)
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+
+  @@index([slug])
+}
+
+// Header Menü Öğeleri
+model MenuItem {
+  id        String   @id @default(cuid())
+  label     String   // Menü etiketi
+  href      String   // Link
+  order     Int      @default(0)
+  isActive  Boolean  @default(true)
+  openInNewTab Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([order])
+}
+
+// Footer Linkleri
+model FooterLink {
+  id        String   @id @default(cuid())
+  section   String   // "quick-links", "popular-routes"
+  label     String
+  href      String
+  order     Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([section])
+  @@index([order])
+}
+
+// İletişim Formu Konuları
+model ContactSubject {
+  id        String   @id @default(cuid())
+  name      String
+  order     Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([order])
+}
+

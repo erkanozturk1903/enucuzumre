@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #0F172A;
+  --color-primary-foreground: #FFFFFF;
+  --color-secondary: #059669;
+  --color-secondary-foreground: #FFFFFF;
+  --color-background: #F8FAFC;
+}
+
+/* Global Styles */
+html {
+  scroll-behavior: smooth;
+}
