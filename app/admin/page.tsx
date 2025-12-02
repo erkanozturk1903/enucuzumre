@@ -236,7 +236,7 @@ export default async function AdminDashboardPage() {
                   className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
                 >
                   <div>
-                    <p className="font-medium text-gray-900">{booking.fullName}</p>
+                    <p className="font-medium text-gray-900">{booking.name}</p>
                     <p className="text-sm text-gray-500">{booking.tour.title}</p>
                   </div>
                   <div className="text-right">
