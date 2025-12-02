@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { Toaster } from "sonner";
 import {
   LayoutDashboard,
@@ -22,7 +22,8 @@ import {
   Navigation,
   Link2,
   Tag,
-  Scale
+  Scale,
+  Users,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
@@ -42,6 +43,7 @@ const NAV_ITEMS = [
   { href: "/admin/iletisim-konulari", label: "İletişim Konuları", icon: Tag },
   { href: "/admin/yasal-sayfalar", label: "Yasal Sayfalar", icon: Scale },
   { href: "/admin/ayarlar", label: "Site Ayarları", icon: Settings },
+  { href: "/admin/kullanicilar", label: "Kullanıcılar", icon: Users, superAdminOnly: true },
 ];
 
 export default function AdminLayout({
@@ -50,6 +52,7 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const { data: session } = useSession();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   // Login sayfası için layout'u render etme
@@ -60,6 +63,16 @@ export default function AdminLayout({
   const handleLogout = async () => {
     await signOut({ callbackUrl: "/admin/login" });
   };
+
+  // Kullanıcı rolüne göre menü öğelerini filtrele
+  const isSuperAdmin = session?.user?.role === "SUPER_ADMIN";
+  const filteredNavItems = NAV_ITEMS.filter(
+    (item) => !item.superAdminOnly || isSuperAdmin
+  );
+
+  const userName = session?.user?.name || "Admin User";
+  const userEmail = session?.user?.email || "admin@enucuzhacumre.com";
+  const userInitial = userName.charAt(0).toUpperCase();
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -79,8 +92,8 @@ export default function AdminLayout({
           </div>
 
           {/* Navigation */}
-          <nav className="flex-1 px-4 py-6 space-y-2">
-            {NAV_ITEMS.map((item) => {
+          <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+            {filteredNavItems.map((item) => {
               const isActive = pathname === item.href;
               return (
                 <Link
@@ -136,8 +149,8 @@ export default function AdminLayout({
                 </button>
               </div>
 
-              <nav className="flex-1 px-4 py-6 space-y-2">
-                {NAV_ITEMS.map((item) => {
+              <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+                {filteredNavItems.map((item) => {
                   const isActive = pathname === item.href;
                   return (
                     <Link
@@ -186,11 +199,11 @@ export default function AdminLayout({
             
             <div className="flex items-center gap-4">
               <div className="text-right">
-                <p className="text-sm font-medium text-gray-700">Admin User</p>
-                <p className="text-xs text-gray-500">admin@enucuzhacumre.com</p>
+                <p className="text-sm font-medium text-gray-700">{userName}</p>
+                <p className="text-xs text-gray-500">{userEmail}</p>
               </div>
               <div className="w-10 h-10 rounded-full bg-[#059669] flex items-center justify-center text-white font-bold">
-                A
+                {userInitial}
               </div>
             </div>
           </div>
