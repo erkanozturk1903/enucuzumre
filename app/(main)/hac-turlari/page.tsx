@@ -2,6 +2,9 @@ import { Container } from "@/components/ui/container";
 import { TourCard } from "@/components/tour-card";
 import { prisma } from "@/lib/prisma";
 
+// Her istekte güncel veri çek (admin'den yapılan değişiklikler anında yansısın)
+export const dynamic = "force-dynamic";
+
 async function getHacTours() {
   try {
     const tours = await prisma.tour.findMany({
