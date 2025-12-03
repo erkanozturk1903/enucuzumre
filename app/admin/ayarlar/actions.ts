@@ -47,6 +47,13 @@ export async function updateSiteSettings(formData: FormData) {
       youtubeUrl: formData.get("youtubeUrl") as string || null,
       footerText: formData.get("footerText") as string,
       tursabNo: formData.get("tursabNo") as string,
+      // Hakkımızda sayfası alanları
+      yearsExperience: parseInt(formData.get("yearsExperience") as string) || 20,
+      totalGuests: parseInt(formData.get("totalGuests") as string) || 50000,
+      satisfactionRate: parseInt(formData.get("satisfactionRate") as string) || 98,
+      companyStory: formData.get("companyStory") as string || null,
+      missionStatement: formData.get("missionStatement") as string || null,
+      visionStatement: formData.get("visionStatement") as string || null,
     };
 
     await prisma.siteSettings.upsert({
@@ -59,6 +66,7 @@ export async function updateSiteSettings(formData: FormData) {
     });
 
     revalidatePath("/");
+    revalidatePath("/hakkimizda");
     revalidatePath("/admin/ayarlar");
 
     return { success: true, message: "Ayarlar başarıyla güncellendi" };

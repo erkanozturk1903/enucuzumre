@@ -237,7 +237,7 @@ export default function AdminSettingsPage() {
         {/* Footer Settings */}
         <div className="bg-white p-6 rounded-2xl border border-gray-100">
           <h2 className="text-xl font-bold text-primary mb-6">Footer</h2>
-          
+
           <div>
             <label htmlFor="footerText" className="block text-sm font-medium text-gray-700 mb-2">
               Footer Metni
@@ -250,6 +250,101 @@ export default function AdminSettingsPage() {
               className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#059669]/20 focus:border-[#059669] transition-colors"
               placeholder="© 2025 En Ucuz Hac Umre. Tüm hakları saklıdır."
             />
+          </div>
+        </div>
+
+        {/* Hakkımızda Settings */}
+        <div className="bg-white p-6 rounded-2xl border border-gray-100">
+          <h2 className="text-xl font-bold text-primary mb-6">Hakkımızda Sayfası</h2>
+
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <label htmlFor="yearsExperience" className="block text-sm font-medium text-gray-700 mb-2">
+                  Yıl Tecrübe
+                </label>
+                <input
+                  type="number"
+                  id="yearsExperience"
+                  name="yearsExperience"
+                  defaultValue={settings?.yearsExperience || 20}
+                  className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#059669]/20 focus:border-[#059669] transition-colors"
+                  placeholder="20"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="totalGuests" className="block text-sm font-medium text-gray-700 mb-2">
+                  Mutlu Misafir Sayısı
+                </label>
+                <input
+                  type="number"
+                  id="totalGuests"
+                  name="totalGuests"
+                  defaultValue={settings?.totalGuests || 50000}
+                  className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#059669]/20 focus:border-[#059669] transition-colors"
+                  placeholder="50000"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="satisfactionRate" className="block text-sm font-medium text-gray-700 mb-2">
+                  Memnuniyet Oranı (%)
+                </label>
+                <input
+                  type="number"
+                  id="satisfactionRate"
+                  name="satisfactionRate"
+                  min="0"
+                  max="100"
+                  defaultValue={settings?.satisfactionRate || 98}
+                  className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#059669]/20 focus:border-[#059669] transition-colors"
+                  placeholder="98"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="companyStory" className="block text-sm font-medium text-gray-700 mb-2">
+                Hikayemiz
+              </label>
+              <textarea
+                id="companyStory"
+                name="companyStory"
+                rows={6}
+                defaultValue={settings?.companyStory || ""}
+                className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#059669]/20 focus:border-[#059669] transition-colors resize-none"
+                placeholder="Şirketinizin hikayesini yazın..."
+              />
+            </div>
+
+            <div>
+              <label htmlFor="missionStatement" className="block text-sm font-medium text-gray-700 mb-2">
+                Misyonumuz
+              </label>
+              <textarea
+                id="missionStatement"
+                name="missionStatement"
+                rows={3}
+                defaultValue={settings?.missionStatement || ""}
+                className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#059669]/20 focus:border-[#059669] transition-colors resize-none"
+                placeholder="Şirketinizin misyonunu yazın..."
+              />
+            </div>
+
+            <div>
+              <label htmlFor="visionStatement" className="block text-sm font-medium text-gray-700 mb-2">
+                Vizyonumuz
+              </label>
+              <textarea
+                id="visionStatement"
+                name="visionStatement"
+                rows={3}
+                defaultValue={settings?.visionStatement || ""}
+                className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#059669]/20 focus:border-[#059669] transition-colors resize-none"
+                placeholder="Şirketinizin vizyonunu yazın..."
+              />
+            </div>
           </div>
         </div>
 

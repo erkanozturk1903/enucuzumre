@@ -2,6 +2,9 @@ import { Container } from "@/components/ui/container";
 import { Award, Users, Heart, Shield } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 
+// Her istekte güncel veri çek (admin'den yapılan değişiklikler anında yansısın)
+export const dynamic = "force-dynamic";
+
 async function getSiteSettings() {
   try {
     const settings = await prisma.siteSettings.findUnique({
