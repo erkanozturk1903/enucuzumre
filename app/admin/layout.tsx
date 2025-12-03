@@ -52,7 +52,8 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const { data: session } = useSession();
+  const sessionResult = useSession();
+  const session = sessionResult?.data ?? null;
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   // Login sayfası için layout'u render etme
