@@ -388,3 +388,26 @@ model ContactSubject {
   @@index([order])
 }
 
+// Şubeler
+model Branch {
+  id              String   @id @default(cuid())
+  name            String   // Şube adı (örn: "DİYARBAKIR ŞUBE")
+  city            String   // Şehir
+  address         String   @db.Text // Tam adres
+  phone           String   // Telefon
+  email           String?  // E-posta
+  tursabNo        String?  // TÜRSAB Belge No
+  tursabOwner     String?  // TÜRSAB Belge Sahibi
+  mapUrl          String?  @db.Text // Google Maps embed URL
+  workingHours    String?  // Çalışma saatleri
+  image           String?  // Şube görseli
+  order           Int      @default(0)
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([order])
+  @@index([isActive])
+  @@index([city])
+}
+
