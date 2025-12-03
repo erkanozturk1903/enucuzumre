@@ -29,6 +29,8 @@ const DEFAULT_POPULAR_ROUTES = [
   { href: "/hac-turlari", label: "Hac Turları" },
   { href: "/ramazan-umresi", label: "Ramazan Umresi" },
   { href: "/somestr-umresi", label: "Sömestr Umresi" },
+  { href: "/gizlilik-politikasi", label: "Gizlilik Politikası" },
+  { href: "/kullanim-kosullari", label: "Kullanım Koşulları" },
 ];
 
 async function getFooterData() {
