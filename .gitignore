@@ -9,6 +9,8 @@ out
 build
 dist
 .vercel
+tsconfig.tsbuildinfo
+*.tsbuildinfo
 
 # Environment files
 .env
