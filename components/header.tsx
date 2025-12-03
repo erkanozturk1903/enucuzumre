@@ -25,8 +25,9 @@ const DEFAULT_NAV_LINKS = [
   { id: "1", label: "Anasayfa", href: "/", order: 1 },
   { id: "2", label: "Hakkımızda", href: "/hakkimizda", order: 2 },
   { id: "3", label: "Umre Turları", href: "/umre-turlari", order: 3 },
-  { id: "4", label: "Blog", href: "/blog", order: 4 },
-  { id: "5", label: "İletişim", href: "/iletisim", order: 5 },
+  { id: "4", label: "Şubelerimiz", href: "/subelerimiz", order: 4 },
+  { id: "5", label: "Blog", href: "/blog", order: 5 },
+  { id: "6", label: "İletişim", href: "/iletisim", order: 6 },
 ];
 
 export function Header({ menuItems, phone, whatsapp }: HeaderProps) {

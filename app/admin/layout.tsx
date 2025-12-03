@@ -24,26 +24,57 @@ import {
   Tag,
   Scale,
   Users,
+  MapPin,
+  Wallet,
+  Globe,
+  ChevronDown,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 
-const NAV_ITEMS = [
-  { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/admin/turlar", label: "Turlar", icon: Package },
-  { href: "/admin/rezervasyonlar", label: "Rezervasyonlar", icon: Calendar },
-  { href: "/admin/mesajlar", label: "Mesajlar", icon: MessageSquare },
-  { href: "/admin/blog", label: "Blog", icon: FileText },
-  { href: "/admin/sss", label: "SSS", icon: HelpCircle },
-  { href: "/admin/banka-hesaplari", label: "Banka Hesapları", icon: Building2 },
-  { href: "/admin/belgeler", label: "Belgeler", icon: Award },
-  { href: "/admin/hero-slider", label: "Hero Slider", icon: ImageIcon },
-  { href: "/admin/menu", label: "Header Menü", icon: Navigation },
-  { href: "/admin/footer-linkler", label: "Footer Linkleri", icon: Link2 },
-  { href: "/admin/iletisim-konulari", label: "İletişim Konuları", icon: Tag },
-  { href: "/admin/yasal-sayfalar", label: "Yasal Sayfalar", icon: Scale },
-  { href: "/admin/ayarlar", label: "Site Ayarları", icon: Settings },
-  { href: "/admin/kullanicilar", label: "Kullanıcılar", icon: Users, superAdminOnly: true },
+// Gruplandırılmış menü yapısı
+const NAV_GROUPS = [
+  {
+    title: "Ana Yönetim",
+    items: [
+      { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
+      { href: "/admin/turlar", label: "Turlar", icon: Package },
+      { href: "/admin/rezervasyonlar", label: "Rezervasyonlar", icon: Calendar },
+      { href: "/admin/mesajlar", label: "Mesajlar", icon: MessageSquare },
+    ],
+  },
+  {
+    title: "İçerik",
+    items: [
+      { href: "/admin/blog", label: "Blog", icon: FileText },
+      { href: "/admin/sss", label: "SSS", icon: HelpCircle },
+      { href: "/admin/subeler", label: "Şubeler", icon: MapPin },
+    ],
+  },
+  {
+    title: "Finans & Belgeler",
+    items: [
+      { href: "/admin/banka-hesaplari", label: "Banka Hesapları", icon: Wallet },
+      { href: "/admin/belgeler", label: "Belgeler", icon: Award },
+    ],
+  },
+  {
+    title: "Site Görünümü",
+    items: [
+      { href: "/admin/hero-slider", label: "Hero Slider", icon: ImageIcon },
+      { href: "/admin/menu", label: "Header Menü", icon: Navigation },
+      { href: "/admin/footer-linkler", label: "Footer Linkleri", icon: Link2 },
+    ],
+  },
+  {
+    title: "Sistem",
+    items: [
+      { href: "/admin/iletisim-konulari", label: "İletişim Konuları", icon: Tag },
+      { href: "/admin/yasal-sayfalar", label: "Yasal Sayfalar", icon: Scale },
+      { href: "/admin/ayarlar", label: "Site Ayarları", icon: Settings },
+      { href: "/admin/kullanicilar", label: "Kullanıcılar", icon: Users, superAdminOnly: true },
+    ],
+  },
 ];
 
 export default function AdminLayout({
@@ -67,9 +98,10 @@ export default function AdminLayout({
 
   // Kullanıcı rolüne göre menü öğelerini filtrele
   const isSuperAdmin = session?.user?.role === "SUPER_ADMIN";
-  const filteredNavItems = NAV_ITEMS.filter(
-    (item) => !item.superAdminOnly || isSuperAdmin
-  );
+  const filteredNavGroups = NAV_GROUPS.map((group) => ({
+    ...group,
+    items: group.items.filter((item) => !item.superAdminOnly || isSuperAdmin),
+  })).filter((group) => group.items.length > 0);
 
   const userName = session?.user?.name || "Admin User";
   const userEmail = session?.user?.email || "admin@enucuzhacumre.com";
@@ -93,25 +125,35 @@ export default function AdminLayout({
           </div>
 
           {/* Navigation */}
-          <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
-            {filteredNavItems.map((item) => {
-              const isActive = pathname === item.href;
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={cn(
-                    "flex items-center gap-3 px-4 py-3 rounded-lg transition-all",
-                    isActive
-                      ? "bg-[#059669] text-white shadow-lg"
-                      : "text-gray-300 hover:bg-white/5 hover:text-white"
-                  )}
-                >
-                  <item.icon className="h-5 w-5" />
-                  <span className="font-medium">{item.label}</span>
-                </Link>
-              );
-            })}
+          <nav className="flex-1 px-4 py-4 overflow-y-auto">
+            {filteredNavGroups.map((group, groupIndex) => (
+              <div key={group.title} className={cn(groupIndex > 0 && "mt-4")}>
+                <p className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                  {group.title}
+                </p>
+                <div className="space-y-1">
+                  {group.items.map((item) => {
+                    const isActive = pathname === item.href ||
+                      (item.href !== "/admin" && pathname?.startsWith(item.href));
+                    return (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        className={cn(
+                          "flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all text-sm",
+                          isActive
+                            ? "bg-[#059669] text-white shadow-lg"
+                            : "text-gray-300 hover:bg-white/5 hover:text-white"
+                        )}
+                      >
+                        <item.icon className="h-4 w-4" />
+                        <span className="font-medium">{item.label}</span>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
           </nav>
 
           {/* Logout */}
@@ -150,26 +192,36 @@ export default function AdminLayout({
                 </button>
               </div>
 
-              <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
-                {filteredNavItems.map((item) => {
-                  const isActive = pathname === item.href;
-                  return (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      onClick={() => setIsSidebarOpen(false)}
-                      className={cn(
-                        "flex items-center gap-3 px-4 py-3 rounded-lg transition-all",
-                        isActive
-                          ? "bg-[#059669] text-white"
-                          : "text-gray-300 hover:bg-white/5 hover:text-white"
-                      )}
-                    >
-                      <item.icon className="h-5 w-5" />
-                      <span className="font-medium">{item.label}</span>
-                    </Link>
-                  );
-                })}
+              <nav className="flex-1 px-4 py-4 overflow-y-auto">
+                {filteredNavGroups.map((group, groupIndex) => (
+                  <div key={group.title} className={cn(groupIndex > 0 && "mt-4")}>
+                    <p className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                      {group.title}
+                    </p>
+                    <div className="space-y-1">
+                      {group.items.map((item) => {
+                        const isActive = pathname === item.href ||
+                          (item.href !== "/admin" && pathname?.startsWith(item.href));
+                        return (
+                          <Link
+                            key={item.href}
+                            href={item.href}
+                            onClick={() => setIsSidebarOpen(false)}
+                            className={cn(
+                              "flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all text-sm",
+                              isActive
+                                ? "bg-[#059669] text-white"
+                                : "text-gray-300 hover:bg-white/5 hover:text-white"
+                            )}
+                          >
+                            <item.icon className="h-4 w-4" />
+                            <span className="font-medium">{item.label}</span>
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
               </nav>
 
               <div className="p-4 border-t border-white/10">
