@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Menu, X, Phone, MessageCircle, MoonStar } from "lucide-react";
+import Image from "next/image";
+import { Menu, X, Phone, MessageCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Container } from "@/components/ui/container";
 
@@ -23,10 +24,9 @@ interface HeaderProps {
 const DEFAULT_NAV_LINKS = [
   { id: "1", label: "Anasayfa", href: "/", order: 1 },
   { id: "2", label: "Hakkımızda", href: "/hakkimizda", order: 2 },
-  { id: "3", label: "Hac Turları", href: "/hac-turlari", order: 3 },
-  { id: "4", label: "Umre Turları", href: "/umre-turlari", order: 4 },
-  { id: "5", label: "Blog", href: "/blog", order: 5 },
-  { id: "6", label: "İletişim", href: "/iletisim", order: 6 },
+  { id: "3", label: "Umre Turları", href: "/umre-turlari", order: 3 },
+  { id: "4", label: "Blog", href: "/blog", order: 4 },
+  { id: "5", label: "İletişim", href: "/iletisim", order: 5 },
 ];
 
 export function Header({ menuItems, phone, whatsapp }: HeaderProps) {
@@ -72,10 +72,14 @@ export function Header({ menuItems, phone, whatsapp }: HeaderProps) {
       <Container>
         <div className="flex items-center justify-between">
           {/* Sol: Logo */}
-          <Link href="/" className="flex items-center gap-2 group">
-            <div className="bg-primary/10 p-2 rounded-lg group-hover:bg-primary/20 transition-colors">
-              <MoonStar className="h-6 w-6 text-secondary" />
-            </div>
+          <Link href="/" className="flex items-center gap-3 group">
+            <Image
+              src="/logo.png"
+              alt="En Ucuz Hac Umre"
+              width={44}
+              height={44}
+              className="object-contain"
+            />
             <span className="text-xl font-bold text-primary tracking-tight">
               EnUcuz<span className="text-secondary">HacUmre</span>
             </span>
