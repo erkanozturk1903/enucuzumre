@@ -2,8 +2,14 @@ import NextAuth from "next-auth"
 import Credentials from "next-auth/providers/credentials"
 import bcrypt from "bcryptjs"
 import { prisma } from "@/lib/prisma"
+import { authConfig } from "@/auth.config"
 
+/**
+ * Tam NextAuth konfigürasyonu - Prisma ile
+ * API routes ve Server Components bu dosyayı kullanır
+ */
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  ...authConfig,
   providers: [
     Credentials({
       credentials: {
@@ -54,33 +60,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
     })
   ],
-  pages: {
-    signIn: "/admin/login",
-  },
-  callbacks: {
-    jwt({ token, user }) {
-      if (user) {
-        token.role = user.role as string
-        token.id = user.id as string
-      }
-      return token
-    },
-    session({ session, token }) {
-      if (session.user && token) {
-        session.user.role = token.role as string
-        session.user.id = token.id as string
-      }
-      return session
-    }
-  },
-  secret: process.env.AUTH_SECRET,
-  session: {
-    strategy: "jwt",
-  },
-  trustHost: true,
 })
 
-// Type augmentation
+// Type augmentation for NextAuth v5
 declare module "next-auth" {
   interface User {
     role?: string
@@ -96,7 +78,7 @@ declare module "next-auth" {
   }
 }
 
-declare module "next-auth/jwt" {
+declare module "@auth/core/jwt" {
   interface JWT {
     role?: string
     id?: string
