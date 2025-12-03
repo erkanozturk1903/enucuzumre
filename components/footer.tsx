@@ -54,6 +54,20 @@ async function getFooterData() {
       .filter(link => link.section === "popular-routes")
       .map(link => ({ href: link.href, label: link.label }));
 
+    // Gizlilik Politikası ve Kullanım Koşulları her zaman ekle
+    const legalLinks = [
+      { href: "/gizlilik-politikasi", label: "Gizlilik Politikası" },
+      { href: "/kullanim-kosullari", label: "Kullanım Koşulları" },
+    ];
+
+    // Mevcut popular routes'a legal linkleri ekle (eğer yoksa)
+    const finalPopularRoutes = popularRoutes.length > 0 ? popularRoutes : DEFAULT_POPULAR_ROUTES;
+    legalLinks.forEach(link => {
+      if (!finalPopularRoutes.some(r => r.href === link.href)) {
+        finalPopularRoutes.push(link);
+      }
+    });
+
     return {
       settings: settings || {
         contactPhone: "+90 555 555 55 55",
@@ -72,7 +86,7 @@ async function getFooterData() {
         newsletterButtonText: "Abone Ol",
       },
       quickLinks: quickLinks.length > 0 ? quickLinks : DEFAULT_QUICK_LINKS,
-      popularRoutes: popularRoutes.length > 0 ? popularRoutes : DEFAULT_POPULAR_ROUTES,
+      popularRoutes: finalPopularRoutes,
     };
   } catch (error) {
     console.error("Footer data alınamadı:", error);
