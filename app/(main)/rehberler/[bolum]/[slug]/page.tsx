@@ -85,7 +85,7 @@ function WarningItem({ children }: { children: React.ReactNode }) {
 }
 
 function renderIcerik(icerik: Record<string, any>, gradient: string) {
-  const sections: JSX.Element[] = [];
+  const sections: React.ReactElement[] = [];
 
   // Giriş - Öne çıkarılmış
   if (icerik.giris) {
