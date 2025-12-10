@@ -183,6 +183,10 @@ model SiteSettings {
   twitterUrl      String?
   youtubeUrl      String?
 
+  // Mobil Uygulama Linkleri
+  appStoreUrl     String?  // Apple App Store linki
+  playStoreUrl    String?  // Google Play Store linki
+
   // Footer
   footerText      String  @default("© 2025 En Ucuz Hac Umre. Tüm hakları saklıdır.")
   tursabNo        String  @default("A-12345")
@@ -409,5 +413,163 @@ model Branch {
   @@index([order])
   @@index([isActive])
   @@index([city])
+}
+
+// =====================================================
+// MOBİL UYGULAMA İÇERİKLERİ
+// =====================================================
+
+// Dua Kategorisi
+model DuaKategori {
+  id        String   @id @default(cuid())
+  ad        String   @unique  // "Genel Dua", "Tavaf Duaları" vb.
+  icon      String   @default("fas fa-book-open")
+  order     Int      @default(0)
+  isActive  Boolean  @default(true)
+  dualar    Dua[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([order])
+}
+
+// Dua
+model Dua {
+  id          String      @id @default(cuid())
+  baslik      String      // Dua başlığı
+  altBaslik   String?     // Alt başlık (opsiyonel)
+  kategoriId  String
+  kategori    DuaKategori @relation(fields: [kategoriId], references: [id], onDelete: Cascade)
+  arapca      String      @db.Text  // Arapça metin (RTL)
+  okunusu     String      @db.Text  // Latin harflerle okunuşu
+  meali       String      @db.Text  // Türkçe meali
+  kaynak      String?     // Kaynak (Buhari, Müslim vb.)
+  sesUrl      String?     // Ses dosyası URL (opsiyonel)
+  order       Int         @default(0)
+  isActive    Boolean     @default(true)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@index([kategoriId])
+  @@index([order])
+}
+
+// Rehber Bölüm Enum
+enum RehberBolum {
+  UMRE
+  IHRAM
+  TAVAF
+  SAY
+  HAC
+}
+
+// Rehber
+model Rehber {
+  id        String      @id @default(cuid())
+  slug      String      @unique   // URL-friendly ID (umre-nedir, ihram-giyinme vb.)
+  baslik    String                // Rehber başlığı
+  altBaslik String?               // Alt başlık
+  bolum     RehberBolum           // Ana bölüm (UMRE, IHRAM, TAVAF, SAY, HAC)
+  kategori  String      @default("temel-bilgiler") // Alt kategori
+  icon      String      @default("fas fa-book")
+  renk      String      @default("gradient")
+  icerik    Json                  // Dinamik içerik (giris, tanim, adimlar, hadisler vb.)
+  order     Int         @default(0)
+  isActive  Boolean     @default(true)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  @@index([bolum])
+  @@index([order])
+}
+
+// Ziyaret Yeri Şehir Enum
+enum ZiyaretSehir {
+  MEKKE
+  MEDINE
+}
+
+// Ziyaret Yeri
+model ZiyaretYeri {
+  id              String        @id @default(cuid())
+  slug            String        @unique  // URL-friendly ID
+  baslik          String
+  altBaslik       String?
+  sehir           ZiyaretSehir           // MEKKE veya MEDINE
+  kategori        String        @default("mescid") // mescid, magara, dag, kuyu, tarih
+  lat             Float?                 // Enlem
+  lng             Float?                 // Boylam
+  adres           String?
+  aciklama        String?       @db.Text
+  ibadethane      Boolean       @default(false)
+  ziyaretSaatleri String?
+  girisUcreti     String?
+  resimUrl        String?
+  icon            String        @default("fas fa-mosque")
+  order           Int           @default(0)
+  isActive        Boolean       @default(true)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([sehir])
+  @@index([order])
+}
+
+// Görev Öncelik Enum
+enum GorevOncelik {
+  YUKSEK
+  ORTA
+  DUSUK
+}
+
+// Görev Kategorisi
+model GorevKategori {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  baslik    String
+  icon      String   @default("fas fa-list")
+  renk      String   @default("blue")
+  order     Int      @default(0)
+  isActive  Boolean  @default(true)
+  gorevler  Gorev[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([order])
+}
+
+// Görev (Yapılacak)
+model Gorev {
+  id          String        @id @default(cuid())
+  slug        String        @unique
+  baslik      String
+  aciklama    String?       @db.Text
+  oncelik     GorevOncelik  @default(ORTA)
+  kategoriId  String
+  kategori    GorevKategori @relation(fields: [kategoriId], references: [id], onDelete: Cascade)
+  order       Int           @default(0)
+  isActive    Boolean       @default(true)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@index([kategoriId])
+  @@index([order])
+}
+
+// Mobil SSS
+model MobilSSS {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  soru      String
+  cevap     Json              // Zengin içerik: basit metin, listeli veya karşılaştırmalı
+  kategori  String   @default("genel")
+  icon      String   @default("fas fa-question-circle")
+  order     Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([kategori])
+  @@index([order])
 }
 

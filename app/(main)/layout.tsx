@@ -34,6 +34,8 @@ export default async function MainLayout({
         menuItems={menuItems}
         phone={siteSettings?.contactPhone}
         whatsapp={siteSettings?.whatsappNumber}
+        appStoreUrl={siteSettings?.appStoreUrl || undefined}
+        playStoreUrl={siteSettings?.playStoreUrl || undefined}
       />
       <main className="pt-20 lg:pt-24 min-h-[calc(100vh-80px)]">
         {children}

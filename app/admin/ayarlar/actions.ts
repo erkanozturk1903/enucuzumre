@@ -45,6 +45,8 @@ export async function updateSiteSettings(formData: FormData) {
       facebookUrl: formData.get("facebookUrl") as string || null,
       twitterUrl: formData.get("twitterUrl") as string || null,
       youtubeUrl: formData.get("youtubeUrl") as string || null,
+      appStoreUrl: formData.get("appStoreUrl") as string || null,
+      playStoreUrl: formData.get("playStoreUrl") as string || null,
       footerText: formData.get("footerText") as string,
       tursabNo: formData.get("tursabNo") as string,
       // Hakkımızda sayfası alanları

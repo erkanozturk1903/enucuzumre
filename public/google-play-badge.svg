@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 135 40">
+  <defs>
+    <linearGradient id="b" x1="50%" x2="50%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#1a1a1a"/>
+      <stop offset="100%" stop-color="#000"/>
+    </linearGradient>
+  </defs>
+  <rect width="135" height="40" fill="url(#b)" rx="6"/>
+  <g transform="translate(10, 8)">
+    <path fill="#00d4ff" d="M0 1.5v21l11-10.5z"/>
+    <path fill="#00f076" d="M0 22.5l11-10.5 4 4z"/>
+    <path fill="#ff3a44" d="M15 16l-4-4 4-4 5 3z"/>
+    <path fill="#ffbc00" d="M0 1.5l15 9-4 4z"/>
+  </g>
+  <text fill="#fff" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="7" x="35" y="13">GET IT ON</text>
+  <text fill="#fff" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="13" font-weight="500" x="35" y="28">Google Play</text>
+</svg>

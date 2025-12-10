@@ -234,6 +234,41 @@ export default function AdminSettingsPage() {
           </div>
         </div>
 
+        {/* Mobile App Links */}
+        <div className="bg-white p-6 rounded-2xl border border-gray-100">
+          <h2 className="text-xl font-bold text-primary mb-6">Mobil Uygulama Linkleri</h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label htmlFor="appStoreUrl" className="block text-sm font-medium text-gray-700 mb-2">
+                App Store URL (iOS)
+              </label>
+              <input
+                type="url"
+                id="appStoreUrl"
+                name="appStoreUrl"
+                defaultValue={settings?.appStoreUrl || ""}
+                className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#059669]/20 focus:border-[#059669] transition-colors"
+                placeholder="https://apps.apple.com/app/..."
+              />
+            </div>
+
+            <div>
+              <label htmlFor="playStoreUrl" className="block text-sm font-medium text-gray-700 mb-2">
+                Play Store URL (Android)
+              </label>
+              <input
+                type="url"
+                id="playStoreUrl"
+                name="playStoreUrl"
+                defaultValue={settings?.playStoreUrl || ""}
+                className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#059669]/20 focus:border-[#059669] transition-colors"
+                placeholder="https://play.google.com/store/apps/..."
+              />
+            </div>
+          </div>
+        </div>
+
         {/* Footer Settings */}
         <div className="bg-white p-6 rounded-2xl border border-gray-100">
           <h2 className="text-xl font-bold text-primary mb-6">Footer</h2>

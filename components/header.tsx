@@ -18,6 +18,8 @@ interface HeaderProps {
   menuItems?: MenuItem[];
   phone?: string;
   whatsapp?: string;
+  appStoreUrl?: string;
+  playStoreUrl?: string;
 }
 
 // Varsayılan menü (veritabanından veri gelmezse)
@@ -30,13 +32,14 @@ const DEFAULT_NAV_LINKS = [
   { id: "6", label: "İletişim", href: "/iletisim", order: 6 },
 ];
 
-export function Header({ menuItems, phone, whatsapp }: HeaderProps) {
+export function Header({ menuItems, phone, whatsapp, appStoreUrl, playStoreUrl }: HeaderProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const navLinks = menuItems && menuItems.length > 0 ? menuItems : DEFAULT_NAV_LINKS;
   const phoneNumber = phone || "+90 555 555 55 55";
   const whatsappNumber = whatsapp || "+905555555555";
+  const hasAppLinks = appStoreUrl || playStoreUrl;
 
   // Scroll takibi
   useEffect(() => {
@@ -73,15 +76,8 @@ export function Header({ menuItems, phone, whatsapp }: HeaderProps) {
       <Container>
         <div className="flex items-center justify-between">
           {/* Sol: Logo */}
-          <Link href="/" className="flex items-center gap-3 group">
-            <Image
-              src="/logo.png"
-              alt="En Ucuz Hac Umre"
-              width={44}
-              height={44}
-              className="object-contain"
-            />
-            <span className="text-xl font-bold text-primary tracking-tight">
+          <Link href="/" className="flex items-center group">
+            <span className="text-2xl font-bold text-primary tracking-tight">
               EnUcuz<span className="text-secondary">HacUmre</span>
             </span>
           </Link>
@@ -101,7 +97,46 @@ export function Header({ menuItems, phone, whatsapp }: HeaderProps) {
           </nav>
 
           {/* Sağ: Aksiyon Butonları */}
-          <div className="hidden lg:flex items-center gap-4">
+          <div className="hidden lg:flex items-center gap-3">
+            {/* App Store Linkleri */}
+            {hasAppLinks && (
+              <div className="flex items-center gap-2 mr-2">
+                {appStoreUrl && (
+                  <a
+                    href={appStoreUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="transition-opacity hover:opacity-80"
+                    title="App Store'dan İndir"
+                  >
+                    <Image
+                      src="/app-store-badge.svg"
+                      alt="App Store"
+                      width={120}
+                      height={40}
+                      className="h-9 w-auto"
+                    />
+                  </a>
+                )}
+                {playStoreUrl && (
+                  <a
+                    href={playStoreUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="transition-opacity hover:opacity-80"
+                    title="Google Play'den İndir"
+                  >
+                    <Image
+                      src="/google-play-badge.svg"
+                      alt="Google Play"
+                      width={135}
+                      height={40}
+                      className="h-9 w-auto"
+                    />
+                  </a>
+                )}
+              </div>
+            )}
             <a
               href={`tel:${phoneNumber.replace(/\s/g, "")}`}
               className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-primary border border-gray-200 rounded-full hover:border-primary hover:bg-gray-50 transition-colors"
@@ -196,6 +231,45 @@ export function Header({ menuItems, phone, whatsapp }: HeaderProps) {
                 WhatsApp
               </a>
             </div>
+
+            {/* Mobil App Store Linkleri */}
+            {hasAppLinks && (
+              <div className="mt-6 pt-6 border-t border-gray-100">
+                <p className="text-sm text-gray-500 mb-3 text-center">Mobil Uygulamamız</p>
+                <div className="flex justify-center gap-3">
+                  {appStoreUrl && (
+                    <a
+                      href={appStoreUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Image
+                        src="/app-store-badge.svg"
+                        alt="App Store"
+                        width={120}
+                        height={40}
+                        className="h-10 w-auto"
+                      />
+                    </a>
+                  )}
+                  {playStoreUrl && (
+                    <a
+                      href={playStoreUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Image
+                        src="/google-play-badge.svg"
+                        alt="Google Play"
+                        width={135}
+                        height={40}
+                        className="h-10 w-auto"
+                      />
+                    </a>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

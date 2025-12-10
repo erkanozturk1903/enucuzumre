@@ -50,3 +50,4 @@ prisma/migrations/*_migration_lock.toml
 # Uploads (optional - remove if you want to version control uploads)
 # public/uploads/*
 # !public/uploads/.gitkeep
+flutter_app/

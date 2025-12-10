@@ -28,6 +28,10 @@ import {
   Wallet,
   Globe,
   ChevronDown,
+  Smartphone,
+  BookOpen,
+  Map,
+  CheckSquare,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
@@ -49,6 +53,17 @@ const NAV_GROUPS = [
       { href: "/admin/blog", label: "Blog", icon: FileText },
       { href: "/admin/sss", label: "SSS", icon: HelpCircle },
       { href: "/admin/subeler", label: "Şubeler", icon: MapPin },
+    ],
+  },
+  {
+    title: "Mobil Uygulama",
+    items: [
+      { href: "/admin/mobil", label: "Genel Bakış", icon: Smartphone },
+      { href: "/admin/mobil/dualar", label: "Dualar", icon: BookOpen },
+      { href: "/admin/mobil/rehberler", label: "Rehberler", icon: Map },
+      { href: "/admin/mobil/ziyaret-yerleri", label: "Ziyaret Yerleri", icon: MapPin },
+      { href: "/admin/mobil/yapilacaklar", label: "Yapılacaklar", icon: CheckSquare },
+      { href: "/admin/mobil/sss", label: "Mobil SSS", icon: HelpCircle },
     ],
   },
   {
@@ -133,8 +148,11 @@ export default function AdminLayout({
                 </p>
                 <div className="space-y-1">
                   {group.items.map((item) => {
-                    const isActive = pathname === item.href ||
-                      (item.href !== "/admin" && pathname?.startsWith(item.href));
+                    // Dashboard sayfaları (/admin, /admin/mobil) için sadece tam eşleşme
+                    const isExactMatchOnly = item.href === "/admin" || item.href === "/admin/mobil";
+                    const isActive = isExactMatchOnly
+                      ? pathname === item.href
+                      : pathname === item.href || pathname?.startsWith(item.href + "/");
                     return (
                       <Link
                         key={item.href}
@@ -200,8 +218,11 @@ export default function AdminLayout({
                     </p>
                     <div className="space-y-1">
                       {group.items.map((item) => {
-                        const isActive = pathname === item.href ||
-                          (item.href !== "/admin" && pathname?.startsWith(item.href));
+                        // Dashboard sayfaları (/admin, /admin/mobil) için sadece tam eşleşme
+                        const isExactMatchOnly = item.href === "/admin" || item.href === "/admin/mobil";
+                        const isActive = isExactMatchOnly
+                          ? pathname === item.href
+                          : pathname === item.href || pathname?.startsWith(item.href + "/");
                         return (
                           <Link
                             key={item.href}
