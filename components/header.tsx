@@ -83,12 +83,12 @@ export function Header({ menuItems, phone, whatsapp, appStoreUrl, playStoreUrl }
           </Link>
 
           {/* Orta: Desktop Navigasyon */}
-          <nav className="hidden lg:flex items-center gap-8">
+          <nav className="hidden lg:flex items-center gap-4 xl:gap-6">
             {navLinks.sort((a, b) => a.order - b.order).map((link) => (
               <Link
                 key={link.id}
                 href={link.href}
-                className="text-sm font-medium text-gray-700 hover:text-secondary transition-colors relative group py-2"
+                className="text-sm font-medium text-gray-700 hover:text-secondary transition-colors relative group py-2 whitespace-nowrap"
               >
                 {link.label}
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-secondary transition-all duration-300 group-hover:w-full" />
