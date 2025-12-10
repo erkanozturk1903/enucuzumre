@@ -58,7 +58,6 @@ export default function TourNotFound() {
             <div className="flex flex-wrap gap-2 justify-center">
               {[
                 { href: "/umre-turlari", label: "Umre Turları" },
-                { href: "/hac-turlari", label: "Hac Turları" },
                 { href: "/ramazan-umresi", label: "Ramazan Umresi" },
                 { href: "/kudus-turlari", label: "Kudüs Turları" },
               ].map((link) => (

@@ -26,9 +26,9 @@ const DEFAULT_QUICK_LINKS = [
 
 const DEFAULT_POPULAR_ROUTES = [
   { href: "/umre-turlari", label: "Umre Turları" },
-  { href: "/hac-turlari", label: "Hac Turları" },
   { href: "/ramazan-umresi", label: "Ramazan Umresi" },
   { href: "/somestr-umresi", label: "Sömestr Umresi" },
+  { href: "/subelerimiz", label: "Şubelerimiz" },
   { href: "/gizlilik-politikasi", label: "Gizlilik Politikası" },
   { href: "/kullanim-kosullari", label: "Kullanım Koşulları" },
 ];

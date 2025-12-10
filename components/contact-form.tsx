@@ -15,7 +15,6 @@ interface ContactFormProps {
 // Default konular (veritabanından veri gelmezse)
 const DEFAULT_SUBJECTS = [
   { id: "1", name: "Umre Turları" },
-  { id: "2", name: "Hac Turları" },
   { id: "3", name: "Fiyat Bilgisi" },
   { id: "4", name: "Rezervasyon" },
   { id: "5", name: "Diğer" },

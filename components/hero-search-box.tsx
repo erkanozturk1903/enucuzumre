@@ -17,7 +17,6 @@ const CITIES = [
 const TOUR_TYPES = [
   { value: "", label: "Seçiniz" },
   { value: "UMRE", label: "Umre" },
-  { value: "HAC", label: "Hac" },
 ];
 
 const MONTHS = [
@@ -65,8 +64,7 @@ export function HeroSearchBox() {
     if (filters.mekkaHotel) params.set("mekke", filters.mekkaHotel);
     if (filters.medinaHotel) params.set("medine", filters.medinaHotel);
 
-    const searchUrl = filters.tourType === "HAC" ? "/hac-turlari" : "/umre-turlari";
-    router.push(`${searchUrl}?${params.toString()}`);
+    router.push(`/umre-turlari?${params.toString()}`);
   };
 
   return (

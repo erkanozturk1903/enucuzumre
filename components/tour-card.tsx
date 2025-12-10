@@ -40,7 +40,6 @@ export function TourCard({ tour, className }: TourCardProps) {
   // Tip badge'i
   const typeLabels: Record<string, string> = {
     UMRE: "Umre",
-    HAC: "Hac",
     KULTUR: "Kültür"
   };
 
