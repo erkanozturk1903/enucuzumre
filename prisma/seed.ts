@@ -834,6 +834,109 @@ KVKK kapsamındaki taleplerinizi, info@enucuzhacumre.com e-posta adresimize veya
     },
   })
   console.log('KVKK sayfası oluşturuldu')
+
+  // ==================== MOBİL VERİLER ====================
+  console.log('\n📱 Mobil veriler yükleniyor...')
+
+  // DUALAR
+  const dualarData = [
+    { baslik: "Telbiye Duası", altBaslik: "İhrama girerken okunan dua", kategori: "Genel Dua", arapca: "لَبَّيْكَ اللَّهُمَّ لَبَّيْكَ، لَبَّيْكَ لاَ شَرِيكَ لَكَ لَبَّيْكَ", okunusu: "Lebbeyk Allahümme lebbeyk...", meali: "Buyur Allah'ım buyur!", kaynak: "Buhari" },
+    { baslik: "Tavaf Duası", altBaslik: "Tavaf ederken", kategori: "Tavaf Duaları", arapca: "رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً", okunusu: "Rabbena atina fid dünya...", meali: "Rabbimiz! Bize dünyada iyilik ver", kaynak: "Bakara 201" },
+    { baslik: "Safa Tepesi Duası", altBaslik: "Safa tepesinde", kategori: "Safa-Merve Duaları", arapca: "إِنَّ الصَّفَا وَالْمَرْوَةَ مِنْ شَعَائِرِ اللهِ", okunusu: "İnnes Safa vel Mervete...", meali: "Şüphesiz Safa ve Merve Allah'ın şiarlarındandır", kaynak: "Bakara 158" },
+  ]
+
+  const kategoriMap = new Map<string, string>()
+  const kategoriler = ["Genel Dua", "Tavaf Duaları", "Safa-Merve Duaları"]
+  for (let i = 0; i < kategoriler.length; i++) {
+    const k = await prisma.duaKategori.upsert({
+      where: { ad: kategoriler[i] },
+      update: {},
+      create: { ad: kategoriler[i], icon: "fas fa-book", order: i, isActive: true }
+    })
+    kategoriMap.set(kategoriler[i], k.id)
+  }
+
+  for (let i = 0; i < dualarData.length; i++) {
+    const d = dualarData[i]
+    await prisma.dua.upsert({
+      where: { id: `mobil-dua-${i}` },
+      update: { baslik: d.baslik, altBaslik: d.altBaslik, arapca: d.arapca, okunusu: d.okunusu, meali: d.meali, kaynak: d.kaynak, kategoriId: kategoriMap.get(d.kategori)!, order: i },
+      create: { id: `mobil-dua-${i}`, baslik: d.baslik, altBaslik: d.altBaslik, arapca: d.arapca, okunusu: d.okunusu, meali: d.meali, kaynak: d.kaynak, kategoriId: kategoriMap.get(d.kategori)!, order: i, isActive: true }
+    })
+  }
+  console.log('   ✅ Dualar yüklendi')
+
+  // REHBERLER
+  const rehberlerData = [
+    { slug: "umre-nedir", baslik: "Umre Nedir?", altBaslik: "Tanım ve önemi", bolum: "UMRE" as const, icerik: { giris: "Umre, küçük hac olarak bilinen ibadettir.", rukun: ["İhram", "Tavaf", "Sa'y", "Tıraş"] } },
+    { slug: "ihram-nedir", baslik: "İhram Nedir?", altBaslik: "Kuralları", bolum: "IHRAM" as const, icerik: { giris: "İhram, hac ve umre için giyilen kutsal kıyafettir." } },
+    { slug: "tavaf-nedir", baslik: "Tavaf Nedir?", altBaslik: "Nasıl yapılır", bolum: "TAVAF" as const, icerik: { giris: "Tavaf, Kabe'nin etrafında 7 kez dönmektir." } },
+    { slug: "say-nedir", baslik: "Sa'y Nedir?", altBaslik: "Safa-Merve", bolum: "SAY" as const, icerik: { giris: "Sa'y, Safa ve Merve tepeleri arasında 7 kez gidip gelmektir." } },
+  ]
+
+  for (let i = 0; i < rehberlerData.length; i++) {
+    const r = rehberlerData[i]
+    await prisma.rehber.upsert({
+      where: { slug: r.slug },
+      update: { baslik: r.baslik, altBaslik: r.altBaslik, bolum: r.bolum, icerik: r.icerik, order: i },
+      create: { slug: r.slug, baslik: r.baslik, altBaslik: r.altBaslik, bolum: r.bolum, kategori: "temel", icon: "fas fa-book", renk: "blue", icerik: r.icerik, order: i, isActive: true }
+    })
+  }
+  console.log('   ✅ Rehberler yüklendi')
+
+  // ZİYARET YERLERİ
+  const ziyaretData = [
+    { slug: "mescid-i-haram", baslik: "Mescid-i Haram", sehir: "MEKKE" as const, aciklama: "Kabe'nin bulunduğu kutsal mescit" },
+    { slug: "hira-magarasi", baslik: "Hira Mağarası", sehir: "MEKKE" as const, aciklama: "İlk vahyin indiği yer" },
+    { slug: "mescid-i-nebevi", baslik: "Mescid-i Nebevi", sehir: "MEDINE" as const, aciklama: "Peygamber Mescidi" },
+    { slug: "uhud-dagi", baslik: "Uhud Dağı", sehir: "MEDINE" as const, aciklama: "Uhud Savaşı'nın yapıldığı yer" },
+  ]
+
+  for (let i = 0; i < ziyaretData.length; i++) {
+    const z = ziyaretData[i]
+    await prisma.ziyaretYeri.upsert({
+      where: { slug: z.slug },
+      update: { baslik: z.baslik, sehir: z.sehir, aciklama: z.aciklama, order: i },
+      create: { slug: z.slug, baslik: z.baslik, sehir: z.sehir, kategori: "mescid", aciklama: z.aciklama, icon: "fas fa-mosque", order: i, isActive: true }
+    })
+  }
+  console.log('   ✅ Ziyaret Yerleri yüklendi')
+
+  // YAPILACAKLAR
+  const gorevKat = await prisma.gorevKategori.upsert({
+    where: { slug: "hazirlik" },
+    update: {},
+    create: { slug: "hazirlik", baslik: "Hazırlık", icon: "fas fa-check", renk: "#10B981", order: 0, isActive: true }
+  })
+
+  const gorevler = ["Pasaport kontrolü", "Vize başvurusu", "İhram takımı al", "Duaları öğren"]
+  for (let i = 0; i < gorevler.length; i++) {
+    const slug = gorevler[i].toLowerCase().replace(/\s+/g, "-").replace(/ş/g, "s").replace(/ü/g, "u").replace(/ö/g, "o").replace(/ı/g, "i")
+    await prisma.gorev.upsert({
+      where: { slug },
+      update: { baslik: gorevler[i], order: i },
+      create: { slug, baslik: gorevler[i], aciklama: "", oncelik: "ORTA", kategoriId: gorevKat.id, order: i, isActive: true }
+    })
+  }
+  console.log('   ✅ Yapılacaklar yüklendi')
+
+  // MOBİL SSS
+  const sssData = [
+    { slug: "ihram-nasil-giyilir", soru: "İhram nasıl giyilir?", cevap: { giris: "İhram iki parça dikişsiz beyaz kumaştan oluşur.", maddeler: ["Alt parça bele sarılır", "Üst parça omuzlara atılır"] } },
+    { slug: "tavaf-nasil-yapilir", soru: "Tavaf nasıl yapılır?", cevap: { giris: "Tavaf Kabe'nin etrafında 7 tur dönmektir.", maddeler: ["Hacer-i Esved'den başla", "Sola dön", "7 tur tamamla"] } },
+  ]
+
+  for (let i = 0; i < sssData.length; i++) {
+    const s = sssData[i]
+    await prisma.mobilSSS.upsert({
+      where: { slug: s.slug },
+      update: { soru: s.soru, cevap: s.cevap, order: i },
+      create: { slug: s.slug, soru: s.soru, cevap: s.cevap, kategori: "Genel", icon: "fas fa-question", order: i, isActive: true }
+    })
+  }
+  console.log('   ✅ Mobil SSS yüklendi')
+
+  console.log('\n🎉 Tüm seed işlemleri tamamlandı!')
 }
 
 main()
