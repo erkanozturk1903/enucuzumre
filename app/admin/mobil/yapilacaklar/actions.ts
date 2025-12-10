@@ -52,7 +52,7 @@ export async function deleteKategori(id: string) {
       where: { id },
       include: { _count: { select: { gorevler: true } } },
     });
-    if (kategori?._count.gorevler > 0) {
+    if ((kategori?._count?.gorevler ?? 0) > 0) {
       return { success: false, error: "Bu kategoride görevler var, önce görevleri silin" };
     }
     await prisma.gorevKategori.delete({ where: { id } });
