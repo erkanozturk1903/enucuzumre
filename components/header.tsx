@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Menu, X, Phone, MessageCircle } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Container } from "@/components/ui/container";
 
@@ -16,8 +16,6 @@ interface MenuItem {
 
 interface HeaderProps {
   menuItems?: MenuItem[];
-  phone?: string;
-  whatsapp?: string;
   appStoreUrl?: string;
   playStoreUrl?: string;
 }
@@ -32,13 +30,11 @@ const DEFAULT_NAV_LINKS = [
   { id: "6", label: "İletişim", href: "/iletisim", order: 6 },
 ];
 
-export function Header({ menuItems, phone, whatsapp, appStoreUrl, playStoreUrl }: HeaderProps) {
+export function Header({ menuItems, appStoreUrl, playStoreUrl }: HeaderProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const navLinks = menuItems && menuItems.length > 0 ? menuItems : DEFAULT_NAV_LINKS;
-  const phoneNumber = phone || "+90 555 555 55 55";
-  const whatsappNumber = whatsapp || "+905555555555";
   const hasAppLinks = appStoreUrl || playStoreUrl;
 
   // Scroll takibi
@@ -137,22 +133,6 @@ export function Header({ menuItems, phone, whatsapp, appStoreUrl, playStoreUrl }
                 )}
               </div>
             )}
-            <a
-              href={`tel:${phoneNumber.replace(/\s/g, "")}`}
-              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-primary border border-gray-200 rounded-full hover:border-primary hover:bg-gray-50 transition-colors"
-            >
-              <Phone className="h-4 w-4" />
-              <span>Hemen Ara</span>
-            </a>
-            <a
-              href={`https://wa.me/${whatsappNumber.replace(/\D/g, "")}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-[#25D366] rounded-full hover:bg-[#128C7E] transition-colors shadow-sm hover:shadow-md"
-            >
-              <MessageCircle className="h-4 w-4" />
-              <span>WhatsApp</span>
-            </a>
           </div>
 
           {/* Mobil Menü Butonu */}
@@ -213,24 +193,6 @@ export function Header({ menuItems, phone, whatsapp, appStoreUrl, playStoreUrl }
               ))}
             </nav>
 
-            <div className="mt-8 flex flex-col gap-4">
-              <a
-                href={`tel:${phoneNumber.replace(/\s/g, "")}`}
-                className="flex items-center justify-center gap-2 px-4 py-3 text-base font-medium text-primary border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors w-full"
-              >
-                <Phone className="h-5 w-5" />
-                Hemen Ara
-              </a>
-              <a
-                href={`https://wa.me/${whatsappNumber.replace(/\D/g, "")}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 px-4 py-3 text-base font-medium text-white bg-[#25D366] rounded-xl hover:bg-[#128C7E] transition-colors shadow-sm w-full"
-              >
-                <MessageCircle className="h-5 w-5" />
-                WhatsApp
-              </a>
-            </div>
 
             {/* Mobil App Store Linkleri */}
             {hasAppLinks && (

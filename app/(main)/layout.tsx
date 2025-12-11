@@ -1,5 +1,6 @@
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import { FloatingWhatsApp } from "@/components/floating-whatsapp";
 import { prisma } from "@/lib/prisma";
 
 async function getLayoutData() {
@@ -32,8 +33,6 @@ export default async function MainLayout({
     <>
       <Header
         menuItems={menuItems}
-        phone={siteSettings?.contactPhone}
-        whatsapp={siteSettings?.whatsappNumber}
         appStoreUrl={siteSettings?.appStoreUrl || undefined}
         playStoreUrl={siteSettings?.playStoreUrl || undefined}
       />
@@ -41,6 +40,7 @@ export default async function MainLayout({
         {children}
       </main>
       <Footer />
+      <FloatingWhatsApp phoneNumber={siteSettings?.whatsappNumber || undefined} />
     </>
   );
 }
