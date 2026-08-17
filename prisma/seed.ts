@@ -4,27 +4,38 @@ import bcrypt from 'bcryptjs'
 const prisma = new PrismaClient()
 
 async function main() {
-  // Şifreyi hashle
-  const hashedPassword = await bcrypt.hash('Mira2015', 12)
+  // Süper admin bilgileri ortam değişkenlerinden okunur; şifre bu depoya yazılmaz.
+  // Kullanıcı zaten varsa şifresine dokunulmaz, böylece panelden veya elle yapılan
+  // şifre değişikliği her deploy'daki seed tarafından sıfırlanmaz.
+  const adminEmail = process.env.ADMIN_EMAIL
+  const adminPassword = process.env.ADMIN_PASSWORD
 
-  // Super Admin kullanıcısını oluştur veya güncelle
-  const superAdmin = await prisma.user.upsert({
-    where: { email: 'erozturk0381@gmail.com' },
-    update: {
-      password: hashedPassword,
-      role: 'SUPER_ADMIN',
-      isActive: true,
-    },
-    create: {
-      email: 'erozturk0381@gmail.com',
-      password: hashedPassword,
-      name: 'Erkan Öztürk',
-      role: 'SUPER_ADMIN',
-      isActive: true,
-    },
-  })
+  if (!adminEmail) {
+    console.log('ADMIN_EMAIL tanımlı değil, süper admin adımı atlandı.')
+  } else {
+    const existing = await prisma.user.findUnique({ where: { email: adminEmail } })
 
-  console.log('Super Admin oluşturuldu:', superAdmin.email)
+    if (existing) {
+      const superAdmin = await prisma.user.update({
+        where: { email: adminEmail },
+        data: { role: 'SUPER_ADMIN', isActive: true },
+      })
+      console.log('Super Admin doğrulandı (şifre korundu):', superAdmin.email)
+    } else if (!adminPassword) {
+      console.log(`${adminEmail} bulunamadı; ADMIN_PASSWORD tanımlı olmadığı için oluşturulmadı.`)
+    } else {
+      const superAdmin = await prisma.user.create({
+        data: {
+          email: adminEmail,
+          password: await bcrypt.hash(adminPassword, 12),
+          name: 'Erkan Öztürk',
+          role: 'SUPER_ADMIN',
+          isActive: true,
+        },
+      })
+      console.log('Super Admin oluşturuldu:', superAdmin.email)
+    }
+  }
 
   // Hero Slider'ları oluştur
   const heroSlides = [
