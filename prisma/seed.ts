@@ -28,7 +28,7 @@ async function main() {
         data: {
           email: adminEmail,
           password: await bcrypt.hash(adminPassword, 12),
-          name: 'Erkan Öztürk',
+          name: 'Hasan Yıldırım',
           role: 'SUPER_ADMIN',
           isActive: true,
         },
@@ -416,7 +416,7 @@ async function main() {
 
 Bu hazırlıkları tamamladıktan sonra huzurlu bir şekilde yolculuğunuza başlayabilirsiniz.`,
       image: 'https://images.unsplash.com/photo-1591604129939-f1efa4d9f7fa?w=800&q=80',
-      author: 'Erkan Öztürk',
+      author: 'En Ucuz Hac Umre',
       category: 'Rehber',
       isPublished: true,
       publishedAt: new Date('2025-01-15'),
@@ -455,7 +455,7 @@ Kadınlar için özel bir ihram kıyafeti yoktur. Normal tesettür kıyafetleriy
 
 Bu kurallara uyarak ihram halinizi koruyabilirsiniz.`,
       image: 'https://images.unsplash.com/photo-1564769625905-50e93615e769?w=800&q=80',
-      author: 'Erkan Öztürk',
+      author: 'En Ucuz Hac Umre',
       category: 'Bilgi',
       isPublished: true,
       publishedAt: new Date('2025-01-10'),
@@ -500,7 +500,7 @@ Uhud Savaşı'nın yaşandığı tarihi alan.
 
 Bu mekanları ziyaret ederek manevi yolculuğunuzu zenginleştirebilirsiniz.`,
       image: 'https://images.unsplash.com/photo-1580418827493-f2b22c0a76cb?w=800&q=80',
-      author: 'Erkan Öztürk',
+      author: 'En Ucuz Hac Umre',
       category: 'Gezi',
       isPublished: true,
       publishedAt: new Date('2025-01-05'),
